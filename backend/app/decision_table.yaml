@@ -1,0 +1,34 @@
+# 決策表：意圖 -> 最低證據等級 / 允許語氣 / 找不到足夠證據時的行為
+#
+# 這張表是給非工程師（法遵、行銷）也能審核的規則，
+# 刻意用 YAML 而不是寫死在程式碼裡，方便之後版本控管、逐條修改。
+
+MEDICAL_EFFICACY_CLAIM:
+  description: "涉及醫療/療效聲明的問題（例如：可以治療、可以根治）"
+  min_evidence_tier: A
+  allowed_tone: "只能引用臨床等級證據，語氣客觀陳述數據，不能加油添醋"
+  fallback_action: REFER_HUMAN
+  banned_words: ["治癒", "根治", "保證有效", "醫療級療效"]
+
+GENERAL_PRODUCT_INFO:
+  description: "一般產品資訊問題（成分、用法、適用膚質等）"
+  min_evidence_tier: C
+  allowed_tone: "可以用「有使用者反映」「官方資料顯示」這類語氣"
+  fallback_action: CONSERVATIVE_ANSWER
+  banned_words: ["治癒", "根治"]
+
+COMPLAINT:
+  description: "客訴、退換貨、產品瑕疵"
+  min_evidence_tier: D
+  allowed_tone: "同理、簡短確認問題，不做任何產品功效相關回應"
+  fallback_action: REFER_HUMAN
+  banned_words: []
+  # 客訴類別不看有沒有檢索到內容，一律直接轉真人，不讓 LLM 有機會接手回答
+  always_fallback: true
+
+UNKNOWN:
+  description: "無法分類的問題，預設走保守路線"
+  min_evidence_tier: A
+  allowed_tone: "保守、簡短"
+  fallback_action: REFER_HUMAN
+  banned_words: ["治癒", "根治", "保證有效"]

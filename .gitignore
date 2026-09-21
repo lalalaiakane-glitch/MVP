@@ -1,0 +1,13 @@
+# backend
+backend/mvp.db
+backend/mvp.db-journal
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.venv/
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+
+.env
+*.env
